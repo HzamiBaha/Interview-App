@@ -1,0 +1,33 @@
+{
+  "users": [
+    {
+      "email": "test@example.com",
+      "password": "123456",
+      "id": 1
+    },
+    {
+      "email": "newuser@example.com",
+      "password": "$2a$10$0QHFRLIbka4kRHd5hPERuebcojQXqyv50ecbcIc0uB0InCw3L3z3G",
+      "id": 2
+    },
+    {
+      "email": "Baha.Eddine.Hzemi@tn.ey.com",
+      "password": "$2a$10$J8e2tSYmyRH9tbbPo7rXKO1PJsG5WPSgnGy511no9NCp66rrTfp.2",
+      "id": 3
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Sample Task",
+      "completed": false,
+      "userId": 1
+    },
+    {
+      "title": "joooooooooooo s",
+      "completed": false,
+      "userId": 3,
+      "id": 3
+    }
+  ]
+}
