@@ -39,6 +39,10 @@ export class AuthService {
     }
   }
 
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
   login(email: string, password: string): Observable<any> {
     return this.http
       .post<{ accessToken: string }>(`${this.apiUrl}/login`, {
@@ -80,7 +84,7 @@ export class AuthService {
 
   getCurrentUserId(): number | null {
     const user = this.currentUserSubject.value;
-    return user ? parseInt(user.sub, 10) : null; // Convert string ID to number
+    return user ? parseInt(user.sub, 10) : null;
   }
 
   getCurrentUserEmail(): string | null {
@@ -89,9 +93,15 @@ export class AuthService {
   }
 
   private setCurrentUser(token: string): void {
-    const decoded = jwtDecode<TokenPayload>(token);
-    this.currentUserSubject.next(decoded);
+    try {
+      const decoded = jwtDecode<TokenPayload>(token);
+      this.currentUserSubject.next(decoded);
+    } catch (error) {
+      console.error('Invalid token:', error);
+      this.currentUserSubject.next(null);
+    }
   }
+
   // Add this method to the AuthService class
   register(email: string, password: string): Observable<any> {
     return this.http

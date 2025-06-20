@@ -1,16 +1,40 @@
 <mat-card>
-    <mat-card-header>
-        <mat-card-title>Task Management</mat-card-title>
-        <button mat-button (click)="openCreateDialog()" style="margin-left: auto;">
-            <mat-icon>add</mat-icon> Add Task
-        </button>
-        <button mat-button (click)="logout()">Logout</button>
-    </mat-card-header>
-    <mat-card-content>
-        <div *ngIf="isLoading">Loading tasks...</div>
-        <!-- here you need to create a list of tasks -->
-        <!-- each task should have a title and a status  -->
+  <mat-card-header>
+    <mat-card-title>Task Management</mat-card-title>
+    <button mat-button (click)="openCreateDialog()" style="margin-left: auto">
+      <mat-icon>add</mat-icon> Add Task
+    </button>
+    <button mat-button (click)="logout()">Logout</button>
+  </mat-card-header>
+  <mat-card-content>
+    <div *ngIf="isLoading">Loading tasks...</div>
+    <!-- here you need to create a list of tasks -->
+    <mat-list *ngIf="!isLoading && tasks.length > 0">
+      <!-- each task should have a title and a status  -->
+      <mat-list-item *ngFor="let task of tasks">
+        <div mat-line>
+          <strong>{{ task.title }}</strong>
+        </div>
+        <div mat-line>
+          Status: {{ task.completed ? "Completed" : "Pending" }}
+        </div>
         <!-- user must be able to see only his tasks, delete and edit them  -->
+        <button mat-icon-button color="primary" (click)="openEditDialog(task)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteTask(task.id!)">
+          <mat-icon>delete</mat-icon>
+        </button>
         <!-- add a navigation button to the task detail page  -->
-    </mat-card-content>
+        <button
+          mat-icon-button
+          [routerLink]="['/tasks', task.id]"
+          matTooltip="View Details"
+        >
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-list>
+    <div *ngIf="!isLoading && tasks.length === 0">No tasks found.</div>
+  </mat-card-content>
 </mat-card>

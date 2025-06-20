@@ -1,4 +1,3 @@
-// form.component.ts
 import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -33,7 +32,8 @@ import { AuthService } from '../../auth/auth.service';
 })
 export class TaskFormComponent {
   taskForm = this.fb.group({
-    // Define the form controls with validation
+    title: ['', [Validators.required, Validators.minLength(3)]],
+    completed: [false],
   });
 
   isEditMode = false;
@@ -51,7 +51,11 @@ export class TaskFormComponent {
   ) {
     this.isEditMode = data.mode === 'edit';
     if (this.isEditMode && data.task) {
-      // Initialize the form with the task data if in edit mode
+      this.currentTaskId = data.task.id ?? null;
+      this.taskForm.patchValue({
+        title: data.task.title,
+        completed: data.task.completed,
+      });
     }
   }
 
@@ -64,7 +68,7 @@ export class TaskFormComponent {
     this.isLoading = true;
     this.errorMessage = null;
 
-    const userId = 123; // get the user ID from the auth service
+    const userId = this.authService.getCurrentUserId();
 
     if (!userId) {
       this.errorMessage = 'User not authenticated';
@@ -73,30 +77,38 @@ export class TaskFormComponent {
     }
 
     const taskData: Omit<Task, 'id'> = {
-      title: 'test', // this.taskForm.value.title,
-      completed: true, // this.taskForm.value.completed,
+      title: this.taskForm.value.title!,
+      completed: this.taskForm.value.completed!,
       userId: userId,
     };
 
-    //handle the task creation or update based on the mode
-    // and close the dialog with success or error
-    // If in edit mode, include the current task ID
-    this.taskService.createTask(taskData).subscribe(
-      (task) => {
-        this.isLoading = false;
-        this.dialogRef.close(task);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    if (this.isEditMode && this.currentTaskId !== null) {
+      this.taskService
+        .updateTask({ id: this.currentTaskId, ...taskData })
+        .subscribe({
+          next: (updatedTask) => {
+            this.isLoading = false;
+            this.dialogRef.close(true);
+          },
+          error: (err) => {
+            this.errorMessage = 'Failed to update task';
+            this.isLoading = false;
+          },
+        });
+    } else {
+      this.taskService.createTask(taskData).subscribe({
+        next: (newTask) => {
+          this.isLoading = false;
+          this.dialogRef.close(true);
+        },
+        error: (err) => {
+          this.errorMessage = 'Failed to create task';
+          this.isLoading = false;
+        },
+      });
+    }
   }
 
-  /*************  ✨ Windsurf Command ⭐  *************/
-  /**
-   * Close the dialog with a value of false to indicate cancellation.
-   */
-  /*******  c98c9474-1218-4112-b1e0-f8b248b12cad  *******/
   onCancel(): void {
     this.dialogRef.close(false);
   }
