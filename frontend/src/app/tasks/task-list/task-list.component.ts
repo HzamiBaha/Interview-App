@@ -9,7 +9,6 @@ import { TaskService, Task } from '../task.service';
 import { AuthService } from '../../auth/auth.service';
 import { TaskFormComponent } from '../task-form/task-form.component';
 
-
 @Component({
   selector: 'app-task-list',
   standalone: true,
@@ -18,10 +17,10 @@ import { TaskFormComponent } from '../task-form/task-form.component';
     MatCardModule,
     MatListModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
   ],
   templateUrl: './task-list.component.html',
-  styleUrls: ['./task-list.component.scss']
+  styleUrls: ['./task-list.component.scss'],
 })
 export class TaskListComponent {
   tasks: Task[] = [];
@@ -40,23 +39,25 @@ export class TaskListComponent {
     // check if user is authenticated
     // get the tasks for the current user
     // stop the loader in case of success
-
   }
 
   openCreateDialog(): void {
     //open a dialog to create a new task
     // pass the mode as 'create' to the dialog
     // and handle the result to refresh the task list
-
+    this.dialog.open(TaskFormComponent, {
+      width: '400px',
+      data: { mode: 'create' },
+    });
   }
 
   openEditDialog(task: Task): void {
     const dialogRef = this.dialog.open(TaskFormComponent, {
       width: '400px',
-      data: { mode: 'edit', task }
+      data: { mode: 'edit', task },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.loadTasks();
       }

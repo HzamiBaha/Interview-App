@@ -18,14 +18,15 @@ import { RouterModule } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
   loginForm = this.fb.group({
-// create form controls with validation email and password
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required],
   });
 
   errorMessage: string | null = null;
@@ -34,7 +35,13 @@ export class LoginComponent {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      // handle login with authservice
+      const { email, password } = this.loginForm.value;
+      this.authService.login(email!, password!).subscribe({
+        error: (err) => {
+          this.errorMessage =
+            err.error?.message || 'Login failed. Please try again.';
+        },
+      });
     }
   }
 }

@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  catchError,
+  map,
+  tap,
+  throwError,
+} from 'rxjs';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 
@@ -14,11 +21,11 @@ interface TokenPayload {
   email: string;
   iat: number;
   exp: number;
-  sub: string;  // This is the user ID in string format
+  sub: string; // This is the user ID in string format
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private apiUrl = 'http://localhost:3000';
@@ -32,13 +39,31 @@ export class AuthService {
     }
   }
 
-  login(email: string, password: string){
-    // save user token to local storage and set current user
+  login(email: string, password: string): Observable<any> {
+    return this.http
+      .post<{ accessToken: string }>(`${this.apiUrl}/login`, {
+        email,
+        password,
+      })
+      .pipe(
+        tap({
+          next: (response) => {
+            localStorage.setItem('token', response.accessToken);
+            this.setCurrentUser(response.accessToken);
+            this.router.navigate(['/tasks']);
+          },
+          error: (err) => {
+            // Handle error here, e.g., show a notification or log
+            console.error('Login failed:', err);
+          },
+        })
+      );
   }
 
   logout(): void {
-    // Remove token from local storage and reset current user
-    // get back to login page
+    localStorage.removeItem('token');
+    this.currentUserSubject.next(null);
+    this.router.navigate(['/login']);
   }
 
   isAuthenticated(): boolean {
@@ -53,21 +78,29 @@ export class AuthService {
     }
   }
 
-  getCurrentUserId() {
-    // Get the current user ID from the BehaviorSubject
-
+  getCurrentUserId(): number | null {
+    const user = this.currentUserSubject.value;
+    return user ? parseInt(user.sub, 10) : null; // Convert string ID to number
   }
 
-  getCurrentUserEmail() {
-// Get the current user email from the BehaviorSubject
-    
+  getCurrentUserEmail(): string | null {
+    const user = this.currentUserSubject.value;
+    return user ? user.email : null;
   }
 
   private setCurrentUser(token: string): void {
-    // Decode the token and set the current user
+    const decoded = jwtDecode<TokenPayload>(token);
+    this.currentUserSubject.next(decoded);
   }
   // Add this method to the AuthService class
-  register(email: string, password: string) {
-   // Register a new user by sending a POST request to the API
+  register(email: string, password: string): Observable<any> {
+    return this.http
+      .post<User>(`${this.apiUrl}/users`, { email, password })
+      .pipe(
+        tap(() => {
+          // After successful registration, automatically log the user in
+          this.login(email, password).subscribe();
+        })
+      );
   }
 }
