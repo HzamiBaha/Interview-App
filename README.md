@@ -1,7 +1,7 @@
 
 # 🧪 Angular + JSON Server Task Manager App (Interview Test)
 
-This repository contains a **working backend** and a **scaffolded Angular 18 frontend** to assess Angular development skills in a realistic scenario.
+This repository contains a **working backend** and a **scaffolded Angular 17 frontend** to assess Angular development skills in a realistic scenario.
 
 ---
 
@@ -27,7 +27,7 @@ Backend will run at `http://localhost:3000`.
 
 ```json
 {
-  "email": "test@example.com",
+  "email": "newuser@example.com",
   "password": "123456"
 }
 ```
