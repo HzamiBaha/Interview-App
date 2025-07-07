@@ -63,7 +63,16 @@ export class TaskListComponent {
     //open a dialog to create a new task
     // pass the mode as 'create' to the dialog
     // and handle the result to refresh the task list
+    const dialogRef = this.dialog.open(TaskFormComponent, {
+      width: '400px',
+      data: { mode: 'edit' }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadTasks();
+      }
+    });
   }
 
   openEditDialog(task: Task): void {

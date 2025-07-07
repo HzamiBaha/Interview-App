@@ -4,8 +4,8 @@ import { AuthService } from './auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 const auth = inject(AuthService);
-const token = auth.currentUser$.subscribe();
-  req = req.clone({
+const token = localStorage.getItem('token');
+  const request = req.clone({
     setHeaders: {
       Authorization: `Bearer ${token}`
     }
@@ -13,5 +13,5 @@ const token = auth.currentUser$.subscribe();
   
 // set the Authorization header with the token if the user is authenticated
 
-  return next(req);
+  return next(request);
 };

@@ -17,6 +17,14 @@ interface TokenPayload {
   sub: string;  // This is the user ID in string format
 }
 
+interface loginResponse {
+  accessToken: string
+  user: {
+    email: string,
+    id: number
+  }
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -32,11 +40,11 @@ export class AuthService {
     }
   }
 
-  login(email: string, password: string) : Observable<TokenPayload>{
-    return this.http.post<TokenPayload>(`${this.apiUrl}/login`, {email, password}).pipe(
+  login(email: string, password: string) : Observable<loginResponse>{
+    return this.http.post<loginResponse>(`${this.apiUrl}/login`, {email, password}).pipe(
       tap(response => {
-        this.currentUserSubject.next(response);
-        localStorage.setItem('token', JSON.stringify({ token: response, name: name }));
+        console.log(response.accessToken)
+        localStorage.setItem('token', JSON.stringify({ token: response.accessToken, name: name }));
       })
     )
 
