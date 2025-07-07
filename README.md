@@ -19,7 +19,11 @@ This repository contains a **working backend** and a **scaffolded Angular 17 fro
 cd backend
 npm install
 npm start
+<<<<<<< HEAD
 ```   
+=======
+```
+>>>>>>> b5cd4182a89a90b35b93a5503493045ef8e4d8e5
 
 Backend will run at `http://localhost:3000`.
 

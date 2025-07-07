@@ -1,6 +1,10 @@
 mat-card {
+<<<<<<< HEAD
   max-width: 500px;
   margin: 2rem auto;
+=======
+  width: 100%;
+>>>>>>> b5cd4182a89a90b35b93a5503493045ef8e4d8e5
 }
 
 .full-width {
@@ -8,6 +12,7 @@ mat-card {
   margin-bottom: 1rem;
 }
 
+<<<<<<< HEAD
 .error-message {
   color: #f44336;
   margin-bottom: 1rem;
@@ -25,4 +30,11 @@ mat-card {
 
 mat-checkbox {
   margin-bottom: 1rem;
+=======
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+>>>>>>> b5cd4182a89a90b35b93a5503493045ef8e4d8e5
 }

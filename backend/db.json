@@ -4,6 +4,7 @@
       "email": "newuser@example.com",
       "password": "$2a$10$0QHFRLIbka4kRHd5hPERuebcojQXqyv50ecbcIc0uB0InCw3L3z3G",
       "id": 1
+<<<<<<< HEAD
     },
     {
       "email": "matousifiras@esprit.tn",
@@ -19,6 +20,8 @@
       "email": "testwithpostman@example.com",
       "password": "$2a$10$EldD.Kr80iogDC9Jte.lfeu6ILZeH3/S.gkxmr8zPIXivg7rsgc.G",
       "id": 4
+=======
+>>>>>>> b5cd4182a89a90b35b93a5503493045ef8e4d8e5
     }
   ],
   "tasks": [
@@ -27,6 +30,7 @@
       "title": "Sample Task",
       "completed": false,
       "userId": 1
+<<<<<<< HEAD
     },
     {
       "id": 3,
@@ -57,6 +61,8 @@
       "description": "taskwithpostman",
       "completed": "true",
       "id": 7
+=======
+>>>>>>> b5cd4182a89a90b35b93a5503493045ef8e4d8e5
     }
   ]
 }

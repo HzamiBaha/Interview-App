@@ -22,6 +22,7 @@ mat-list-item {
     justify-content: space-between;
   }
 }
+<<<<<<< HEAD
 
 .task-item {
   display: flex;
@@ -44,6 +45,10 @@ mat-list-item {
     color: #666;
     font-size: 14px;
   }
+=======
+.task-checkbox {
+  margin-right: 16px;
+>>>>>>> b5cd4182a89a90b35b93a5503493045ef8e4d8e5
 }
 
 .task-actions {
