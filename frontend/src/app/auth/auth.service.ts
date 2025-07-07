@@ -24,6 +24,7 @@ export class AuthService {
   private apiUrl = 'http://localhost:3000';
   private currentUserSubject = new BehaviorSubject<TokenPayload | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
+  ;
 
   constructor(private http: HttpClient, private router: Router) {
     const token = localStorage.getItem('token');
@@ -34,11 +35,21 @@ export class AuthService {
 
   login(email: string, password: string){
     // save user token to local storage and set current user
+    return this.http.post<{ accessToken: string }>(`${this.apiUrl}/login`, { email, password }).pipe(
+      tap(response => {
+        localStorage.setItem('token', response.accessToken);
+        console.log('Login successful, token:', response.accessToken);
+        this.setCurrentUser(response.accessToken);
+      }),
+      map(response => response.accessToken)
+    );
   }
 
   logout(): void {
     // Remove token from local storage and reset current user
     // get back to login page
+    localStorage.removeItem('token');
+    this.currentUserSubject.next(null);
   }
 
   isAuthenticated(): boolean {
@@ -55,19 +66,28 @@ export class AuthService {
 
   getCurrentUserId() {
     // Get the current user ID from the BehaviorSubject
+    const currentUser = this.currentUserSubject.value;
+    return currentUser ? currentUser.sub : null;
 
   }
 
   getCurrentUserEmail() {
-// Get the current user email from the BehaviorSubject
-    
+    // Get the current user email from the BehaviorSubject
+    const currentUser = this.currentUserSubject.value;
+    return currentUser ? currentUser.email : null;
+
   }
 
   private setCurrentUser(token: string): void {
     // Decode the token and set the current user
+    const decoded = jwtDecode<TokenPayload>(token);
+    console.log('Decoded token:', decoded);
+    this.currentUserSubject.next(decoded);
   }
   // Add this method to the AuthService class
   register(email: string, password: string) {
    // Register a new user by sending a POST request to the API
+    return this.http.post<User>(`${this.apiUrl}/register`, { email, password })
+
   }
 }

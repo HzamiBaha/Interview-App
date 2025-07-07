@@ -4,6 +4,16 @@
       "email": "newuser@example.com",
       "password": "$2a$10$0QHFRLIbka4kRHd5hPERuebcojQXqyv50ecbcIc0uB0InCw3L3z3G",
       "id": 1
+    },
+    {
+      "email": "mohamedamine.nasri@esprit.tn",
+      "password": "$2a$10$6D0i5gP4dYaRL8jbsY7yLeh4OrHTT/pI7xIVhl2lwd/hu4rzZEMWu",
+      "id": 2
+    },
+    {
+      "email": "aminenasri394@gmail.com",
+      "password": "$2a$10$xJitnCYtLoxEAlar88CVSe9Ix0pnfhiN.KW/XP5ogJwsDYWZiOqYu",
+      "id": 3
     }
   ],
   "tasks": [

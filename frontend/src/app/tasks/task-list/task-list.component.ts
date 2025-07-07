@@ -40,6 +40,16 @@ export class TaskListComponent {
     // check if user is authenticated
     // get the tasks for the current user
     // stop the loader in case of success
+    this.taskService.getTasks(this.authService.getCurrentUserId()as any).subscribe({
+      next: (tasks) => {
+        this.tasks = tasks;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading tasks:', error);
+        this.isLoading = false;
+      }
+    });
 
   }
 
@@ -47,6 +57,16 @@ export class TaskListComponent {
     //open a dialog to create a new task
     // pass the mode as 'create' to the dialog
     // and handle the result to refresh the task list
+    const dialogRef = this.dialog.open(TaskFormComponent, {
+      width: '400px',
+      data: { mode: 'create' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadTasks();
+      }
+    });
 
   }
 
@@ -65,6 +85,14 @@ export class TaskListComponent {
 
   deleteTask(id: number): void {
     // delete the task by id after confirmation
+    this.taskService.deleteTask(id).subscribe({
+      next: () => {
+        this.loadTasks();
+      },
+      error: (error) => {
+        console.error('Error deleting task:', error);
+      }
+    });
   }
 
   logout(): void {

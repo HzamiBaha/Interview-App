@@ -30,6 +30,8 @@ import { AuthService } from '../../auth/auth.service';
 export class TaskFormComponent {
   taskForm = this.fb.group({
     // Define the form controls with validation
+    title: ['', [Validators.required, Validators.minLength(3)]],
+    completed: [false],
   });
 
   isEditMode = false;
@@ -46,9 +48,11 @@ export class TaskFormComponent {
   ) {
     this.isEditMode = data.mode === 'edit';
     if (this.isEditMode && data.task) {
-
-      // Initialize the form with the task data if in edit mode
-
+      this.currentTaskId = data.task.id as number;
+      this.taskForm.patchValue({
+        title: data.task.title,
+        completed: data.task.completed
+      });
     }
   }
 
@@ -79,6 +83,27 @@ export class TaskFormComponent {
     //handle the task creation or update based on the mode
     // and close the dialog with success or error
     // If in edit mode, include the current task ID
+    if (this.isEditMode && this.currentTaskId) {
+      this.taskService.updateTask( taskData).subscribe({
+        next: () => {
+          this.dialogRef.close(true);
+        },
+        error: (error) => {
+          this.errorMessage = error.error.message || 'Failed to update task';
+          this.isLoading = false;
+        }
+      });
+    } else {
+      this.taskService.createTask(taskData).subscribe({
+        next: () => {
+          this.dialogRef.close(true);
+        },
+        error: (error) => {
+          this.errorMessage = error.error.message || 'Failed to create task';
+          this.isLoading = false;
+        }
+      });
+    }
 
 
   }

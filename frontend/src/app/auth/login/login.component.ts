@@ -26,6 +26,8 @@ import { RouterModule } from '@angular/router';
 export class LoginComponent {
   loginForm = this.fb.group({
 // create form controls with validation email and password
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
   errorMessage: string | null = null;
@@ -35,6 +37,15 @@ export class LoginComponent {
   onSubmit(): void {
     if (this.loginForm.valid) {
       // handle login with authservice
+      this.authService.login(this.loginForm.value.email as string, this.loginForm.value.password as string).subscribe({
+        next: () => {
+          window.location.href = '/';
+        },
+        error: (error) => {
+          this.errorMessage = error.error?.message || 'Login failed. Please try again.';
+        }
+      });
+
     }
   }
 }

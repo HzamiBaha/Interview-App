@@ -4,8 +4,13 @@
   </mat-card-header>
   <mat-card-content>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    
+
       <!-- create the input fields for email and password with validation -->
+      <label for="email">Email</label>
+      <input type="text" formControlName="email">
+
+      <label for="password">Password</label>
+      <input type="password" formControlName="password">
 
       <div *ngIf="errorMessage" class="error-message">
         {{ errorMessage }}
