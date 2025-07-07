@@ -25,20 +25,37 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<TokenPayload | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
+  // constructor(private http: HttpClient, private router: Router) {
+  //   const token = localStorage.getItem('token');
+  //   if (token) {
+  //     this.setCurrentUser(token);
+  //   }
+  // }
   constructor(private http: HttpClient, private router: Router) {
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.setCurrentUser(token);
-    }
+  const token = localStorage.getItem('token');
+  if (token && token.split('.').length === 3) {
+    this.setCurrentUser(token);
+  } else {
+    localStorage.removeItem('token');
+    this.currentUserSubject.next(null);
   }
+}
 
   login(email: string, password: string){
     // save user token to local storage and set current user
+    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, { email, password }).pipe(
+      tap(response => {
+        localStorage.setItem('token', response.token);
+        this.setCurrentUser(response.token);
+      }),
+      map(response => response.token)
+    );
   }
-
+ 
   logout(): void {
-    // Remove token from local storage and reset current user
-    // get back to login page
+    localStorage.removeItem('token');
+    this.currentUserSubject.next(null);
+    this.router.navigate(['/login']);
   }
 
   isAuthenticated(): boolean {
@@ -55,19 +72,38 @@ export class AuthService {
 
   getCurrentUserId() {
     // Get the current user ID from the BehaviorSubject
+    const currentUser = this.currentUserSubject.value;
 
   }
 
   getCurrentUserEmail() {
-// Get the current user email from the BehaviorSubject
-    
+    // Get the current user email from the BehaviorSubject
+    const currentUser = this.currentUserSubject.value;
+    return currentUser ? currentUser.email : null;
+// Get the current user email from the BehaviorSubject    
   }
 
-  private setCurrentUser(token: string): void {
-    // Decode the token and set the current user
+private setCurrentUser(token: string): void {
+  if (!token || token.split('.').length !== 3) {
+    // Invalid token format, do not set user
+    this.currentUserSubject.next(null);
+    return;
   }
-  // Add this method to the AuthService class
-  register(email: string, password: string) {
-   // Register a new user by sending a POST request to the API
+  try {
+    const decoded = jwtDecode<TokenPayload>(token);
+    this.currentUserSubject.next(decoded);
+  } catch {
+    this.currentUserSubject.next(null);
   }
+}
+// Add this method to the AuthService class
+register(email: string, password: string) {
+ // Register a new user by sending a POST request to the API
+  return this.http.post<User>(`${this.apiUrl}/register`, { email, password }).pipe(
+    tap(user => {
+      // Optionally, you can log in the user immediately after registration
+      this.login(user.email, user.password).subscribe();
+    })
+  );
+}
 }

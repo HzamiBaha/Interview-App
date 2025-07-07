@@ -1,0 +1,13 @@
+<mat-card *ngIf="task">
+  <mat-card-title>Task Details</mat-card-title>
+  <mat-card-content>
+    <p><strong>Title:</strong> {{ task.title }}</p>
+    <p><strong>Status:</strong> {{ task.completed ? 'Completed' : 'Pending' }}</p>
+    <p><strong>User ID:</strong> {{ task.userId }}</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button color="primary" (click)="goBack()">Back to List</button>
+  </mat-card-actions>
+</mat-card>
+<div *ngIf="isLoading">Loading...</div>
+<div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>

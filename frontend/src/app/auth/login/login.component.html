@@ -6,6 +6,24 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     
       <!-- create the input fields for email and password with validation -->
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" [(ngModel)]="email" name="email" type="email" required>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+          Email is required.
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+          Please enter a valid email address.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" [(ngModel)]="password" name="password" type="password" required>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+          Password is required.
+        </mat-error>
+      </mat-form-field>
 
       <div *ngIf="errorMessage" class="error-message">
         {{ errorMessage }}
@@ -14,9 +32,11 @@
       <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">
         Login
       </button>
+
       <div class="register-link">
         Don't have an account? <a class="link-button" routerLink="/register">Register here</a>
       </div>
+
     </form>
   </mat-card-content>
 </mat-card>

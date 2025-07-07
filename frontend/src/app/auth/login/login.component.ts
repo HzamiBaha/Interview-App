@@ -23,18 +23,43 @@ import { RouterModule } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
+
 export class LoginComponent {
   loginForm = this.fb.group({
-// create form controls with validation email and password
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
+  }, {
+    updateOn: 'submit'
   });
 
   errorMessage: string | null = null;
+  // Add these properties for ngModel binding
+  email: string = '';
+  password: string = '';
 
   constructor(private fb: FormBuilder, private authService: AuthService) {}
 
   onSubmit(): void {
+    // Sync ngModel values to form controls before submit
+    this.loginForm.patchValue({
+      email: this.email,
+      password: this.password
+    });
+
     if (this.loginForm.valid) {
-      // handle login with authservice
+      const { email, password } = this.loginForm.value;
+      if (typeof email === 'string' && typeof password === 'string') {
+        this.authService.login(email, password).subscribe({
+          next: () => {
+            this.errorMessage = null;
+          },
+          error: (error) => {
+            this.errorMessage = error.message;
+          }
+        });
+      } else {
+        this.errorMessage = 'Email and password are required.';
+      }
     }
   }
 }
