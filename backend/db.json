@@ -4,6 +4,11 @@
       "email": "newuser@example.com",
       "password": "$2a$10$0QHFRLIbka4kRHd5hPERuebcojQXqyv50ecbcIc0uB0InCw3L3z3G",
       "id": 1
+    },
+    {
+      "email": "test@example.com",
+      "password": "$2a$10$nK2QqJ7lxXRDCDogHSXdMuvrxmfn/V7a/xyf8.hCaxYDKsQlCbkrm",
+      "id": 2
     }
   ],
   "tasks": [
@@ -12,6 +17,24 @@
       "title": "Sample Task",
       "completed": false,
       "userId": 1
+    },
+    {
+      "title": "test2333",
+      "completed": false,
+      "userId": 2,
+      "id": 3
+    },
+    {
+      "title": "new Task by Marabou Salahhhh",
+      "completed": false,
+      "userId": 1,
+      "id": 5
+    },
+    {
+      "title": "finalllll",
+      "completed": true,
+      "userId": 2,
+      "id": 6
     }
   ]
 }

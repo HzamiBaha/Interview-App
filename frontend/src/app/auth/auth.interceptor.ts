@@ -3,8 +3,15 @@ import { inject } from '@angular/core';
 import { AuthService } from './auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-// Inject the AuthService to access the current user token
-// set the Authorization header with the token if the user is authenticated
+  const token = localStorage.getItem('token');
+  
+  if (token) {
+    // Clone the request and add the Authorization header
+    const authReq = req.clone({
+      headers: req.headers.set('Authorization', `Bearer ${token}`)
+    });
+    return next(authReq);
+  }
 
   return next(req);
 };

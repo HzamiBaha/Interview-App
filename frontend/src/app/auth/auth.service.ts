@@ -14,7 +14,7 @@ interface TokenPayload {
   email: string;
   iat: number;
   exp: number;
-  sub: string;  // This is the user ID in string format
+  sub: string; 
 }
 
 @Injectable({
@@ -32,13 +32,20 @@ export class AuthService {
     }
   }
 
-  login(email: string, password: string){
-    // save user token to local storage and set current user
+  login(email: string, password: string): Observable<any> {
+    return this.http.post<{ accessToken: string, user: User }>(`${this.apiUrl}/login`, { email, password })
+      .pipe(
+        tap(response => {
+          localStorage.setItem('token', response.accessToken);
+          this.setCurrentUser(response.accessToken);
+        })
+      );
   }
 
   logout(): void {
-    // Remove token from local storage and reset current user
-    // get back to login page
+    localStorage.removeItem('token');
+    this.currentUserSubject.next(null);
+    this.router.navigate(['/login']);
   }
 
   isAuthenticated(): boolean {
@@ -53,21 +60,33 @@ export class AuthService {
     }
   }
 
-  getCurrentUserId() {
-    // Get the current user ID from the BehaviorSubject
-
+  getCurrentUserId(): number | null {
+    const currentUser = this.currentUserSubject.value;
+    return currentUser ? parseInt(currentUser.sub) : null;
   }
 
-  getCurrentUserEmail() {
-// Get the current user email from the BehaviorSubject
-    
+  getCurrentUserEmail(): string | null {
+    const currentUser = this.currentUserSubject.value;
+    return currentUser ? currentUser.email : null;
   }
 
   private setCurrentUser(token: string): void {
-    // Decode the token and set the current user
+    try {
+      const decoded = jwtDecode<TokenPayload>(token);
+      this.currentUserSubject.next(decoded);
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      this.logout();
+    }
   }
-  // Add this method to the AuthService class
-  register(email: string, password: string) {
-   // Register a new user by sending a POST request to the API
+  
+  register(email: string, password: string): Observable<any> {
+    return this.http.post<{ accessToken: string, user: User }>(`${this.apiUrl}/register`, { email, password })
+      .pipe(
+        tap(response => {
+          localStorage.setItem('token', response.accessToken);
+          this.setCurrentUser(response.accessToken);
+        })
+      );
   }
 }

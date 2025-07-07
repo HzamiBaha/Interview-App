@@ -7,7 +7,7 @@ import { TaskManagementComponent } from './tasks/task-management/task-management
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'tasks', component: TaskManagementComponent, canActivate: [authGuard] },
+  { path: 'tasks', component: TaskManagementComponent, /*canActivate: [authGuard]*/ },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/login' }
 ];

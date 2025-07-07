@@ -7,10 +7,47 @@
         <button mat-button (click)="logout()">Logout</button>
     </mat-card-header>
     <mat-card-content>
-        <div *ngIf="isLoading">Loading tasks...</div>
-        <!-- here you need to create a list of tasks -->
-        <!-- each task should have a title and a status  -->
-        <!-- user must be able to see only his tasks, delete and edit them  -->
-        <!-- add a navigation button to the task detail page  -->
+        <div *ngIf="isLoading" class="loading-message">Loading tasks...</div>
+        
+        <div *ngIf="!isLoading && tasks.length === 0" class="no-tasks-message">
+            <mat-icon>assignment</mat-icon>
+            <p>No tasks found. Create your first task!</p>
+        </div>
+
+        <mat-list *ngIf="!isLoading && tasks.length > 0">
+            <mat-list-item *ngFor="let task of tasks" class="task-item">
+                <mat-icon matListItemIcon 
+                         [class.completed]="task.completed"
+                         (click)="toggleTaskStatus(task)">
+                    {{ task.completed ? 'check_circle' : 'radio_button_unchecked' }}
+                </mat-icon>
+                
+                <div matListItemTitle 
+                     [class.completed]="task.completed"
+                     class="task-title"
+                     (click)="getTaskById(task.id!)">
+                    {{ task.title }}
+                </div>
+                
+                <div matListItemLine class="task-status">
+                    Status: {{ task.completed ? 'Completed' : 'Pending' }}
+                </div>
+
+                <div matListItemMeta class="task-actions">
+                    <button mat-icon-button 
+                           (click)="openEditDialog(task)"
+                           matTooltip="Edit task">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    
+                    <button mat-icon-button 
+                           (click)="deleteTask(task.id!)"
+                           matTooltip="Delete task"
+                           color="warn">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </mat-list-item>
+        </mat-list>
     </mat-card-content>
 </mat-card>

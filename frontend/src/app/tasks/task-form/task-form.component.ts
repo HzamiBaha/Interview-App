@@ -29,7 +29,8 @@ import { AuthService } from '../../auth/auth.service';
 })
 export class TaskFormComponent {
   taskForm = this.fb.group({
-    // Define the form controls with validation
+    title: ['', [Validators.required, Validators.minLength(3)]],
+    completed: [false]
   });
 
   isEditMode = false;
@@ -46,9 +47,11 @@ export class TaskFormComponent {
   ) {
     this.isEditMode = data.mode === 'edit';
     if (this.isEditMode && data.task) {
-
-      // Initialize the form with the task data if in edit mode
-
+      this.currentTaskId = data.task.id!;
+      this.taskForm.patchValue({
+        title: data.task.title,
+        completed: data.task.completed
+      });
     }
   }
 
@@ -61,8 +64,7 @@ export class TaskFormComponent {
     this.isLoading = true;
     this.errorMessage = null;
 
-    const userId = 123; // get the user ID from the auth service
-
+    const userId = this.authService.getCurrentUserId();
 
     if (!userId) {
       this.errorMessage = 'User not authenticated';
@@ -71,14 +73,25 @@ export class TaskFormComponent {
     }
 
     const taskData: Omit<Task, 'id'> = {
-      title: "test", // this.taskForm.value.title,
-      completed: true, // this.taskForm.value.completed,
+      title: this.taskForm.value.title!,
+      completed: this.taskForm.value.completed!,
       userId: userId
     };
 
-    //handle the task creation or update based on the mode
-    // and close the dialog with success or error
-    // If in edit mode, include the current task ID
+    const operation = this.isEditMode 
+      ? this.taskService.updateTask({ ...taskData, id: this.currentTaskId! })
+      : this.taskService.createTask(taskData);
+
+    operation.subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.dialogRef.close(true);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = error.error?.message || 'Failed to save task';
+      }
+    });
 
 
   }

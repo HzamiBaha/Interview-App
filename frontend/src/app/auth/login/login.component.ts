@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -25,16 +25,36 @@ import { RouterModule } from '@angular/router';
 })
 export class LoginComponent {
   loginForm = this.fb.group({
-// create form controls with validation email and password
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
   errorMessage: string | null = null;
+  isLoading = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+  constructor(
+    private fb: FormBuilder, 
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      // handle login with authservice
+      this.isLoading = true;
+      this.errorMessage = null;
+      
+      const { email, password } = this.loginForm.value;
+      
+      this.authService.login(email!, password!).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.router.navigate(['/tasks']);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.errorMessage = error.error?.message || 'Login failed. Please check your credentials.';
+        }
+      });
     }
   }
 }
