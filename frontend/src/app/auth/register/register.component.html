@@ -6,6 +6,13 @@
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <!-- create the input fields for email and password  and confirm password with validation -->
 
+      <label for="email">email</label>
+      <input type="email" id="email" formControlName="email" />
+      <label for="password">password</label>
+      <input type="password" id="password" formControlName="password" />
+      <label for="confirm">Confirm Password</label>
+      <input type="password" id="confirm" formControlName="confirmPassword" />
+
       <div *ngIf="errorMessage" class="error-message">
         {{ errorMessage }}
       </div>
@@ -14,7 +21,12 @@
         {{ successMessage }}
       </div>
 
-      <button mat-raised-button color="primary" type="submit" [disabled]="!registerForm.valid">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!registerForm.valid"
+      >
         Register
       </button>
 
