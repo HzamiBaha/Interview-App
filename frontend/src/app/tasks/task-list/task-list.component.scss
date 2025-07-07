@@ -22,33 +22,8 @@ mat-list-item {
     justify-content: space-between;
   }
 }
-<<<<<<< HEAD
-
-.task-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 16px;
-}
-
-.task-content {
-  flex: 1;
-  
-  h3 {
-    margin: 0 0 8px 0;
-    color: #333;
-  }
-  
-  p {
-    margin: 0;
-    color: #666;
-    font-size: 14px;
-  }
-=======
 .task-checkbox {
   margin-right: 16px;
->>>>>>> b5cd4182a89a90b35b93a5503493045ef8e4d8e5
 }
 
 .task-actions {
