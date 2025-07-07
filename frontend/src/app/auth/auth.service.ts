@@ -33,13 +33,13 @@ export class AuthService {
   }
 
  login(email: string, password: string): Observable<string> {
-    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, { email, password })
+    return this.http.post<{ accessToken: string }>(`${this.apiUrl}/login`, { email, password })
       .pipe(
         tap(response => {
-          localStorage.setItem('token', response.token);
-          this.setCurrentUser(response.token);
+          localStorage.setItem('token', response.accessToken);
+          this.setCurrentUser(response.accessToken);
         }),
-        map(response => response.token)
+        map(response => response.accessToken)
       );
   }
 
