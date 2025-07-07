@@ -1,36 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { jwtDecode } from 'jwt-decode';
 
-interface User {
-  email: string;
-  password: string;
-  id: number;
-}
-
-interface TokenPayload {
-  email: string;
-  iat: number;
-  exp: number;
-  sub: string;  // This is the user ID in string format
-}
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000';
-  private currentUserSubject = new BehaviorSubject<TokenPayload | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  private baseUrl = 'https://ton-api.com/api';
 
-  constructor(private http: HttpClient, private router: Router) {
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.setCurrentUser(token);
-    }
-  }
+  constructor(private http: HttpClient, private router: Router) {}  
 
 <<<<<<< HEAD
   login(credentials: {email: string, password: string}): Observable<any> {

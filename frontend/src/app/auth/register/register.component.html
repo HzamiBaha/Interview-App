@@ -45,7 +45,7 @@
         {{ errorMessage }}
       </div>
 
-      <div *ngIf="successMessage" class="success-message">
+      <div *ngIf="successMessage" class="success-message" style="color: green; margin-bottom: 10px;">
         {{ successMessage }}
       </div>
 
@@ -53,7 +53,7 @@
         Register
       </button>
 
-      <div class="login-link">
+      <div class="login-link" style="margin-top: 10px;">
         Already have an account? <a routerLink="/login">Login here</a>
       </div>
     </form>

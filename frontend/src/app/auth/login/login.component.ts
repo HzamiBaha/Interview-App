@@ -10,7 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -55,12 +55,17 @@ export class LoginComponent {
       });
 =======
   loginForm = this.fb.group({
-// create form controls with validation email and password
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
   errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   onSubmit(): void {
     if (this.loginForm.valid) {
@@ -68,4 +73,6 @@ export class LoginComponent {
 >>>>>>> b5cd4182a89a90b35b93a5503493045ef8e4d8e5
     }
   }
+}
+
 }
