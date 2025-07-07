@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Task Manager API Docs</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+      line-height: 1.6;
+      background-color: #f8f8f8;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    code {
+      background: #eee;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    pre {
+      background: #eee;
+      padding: 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>📘 Task Manager Backend API</h1>
+
+  <p>This is a mock backend for the Task Manager Interview App, powered by <code>json-server</code> and <code>json-server-auth</code>.</p>
+
+  <h2>✅ How to Run</h2>
+  <pre><code>cd backend
+npm install
+npm start</code></pre>
+  <p>Backend will run at: <code>http://localhost:3000</code></p>
+
+  <h2>🔐 Authentication</h2>
+  <ul>
+    <li><strong>Register:</strong> <code>POST /register</code></li>
+    <li><strong>Login:</strong> <code>POST /login</code></li>
+    <li>Returns: <code>{ accessToken, user }</code></li>
+  </ul>
+
+  <h3>Test User</h3>
+  <pre><code>{
+  "email": "test@example.com",
+  "password": "123456"
+}</code></pre>
+
+  <h2>📝 Tasks API (auth required)</h2>
+  <ul>
+    <li><code>GET /tasks</code> - Get all tasks</li>
+    <li><code>POST /tasks</code> - Create a task</li>
+    <li><code>PATCH /tasks/:id</code> - Update task</li>
+    <li><code>DELETE /tasks/:id</code> - Delete task</li>
+  </ul>
+
+  <h3>Auth Header</h3>
+  <pre><code>Authorization: Bearer &lt;accessToken&gt;</code></pre>
+
+  <h2>🎯 Interview Tasks</h2>
+  <ol>
+    <li>Create a login form and store the JWT</li>
+    <li>Fetch tasks and display them in a list</li>
+    <li>Implement task add/edit/delete</li>
+    <li>Manage state using a service</li>
+    <li>Protect routes and redirect if not logged in</li>
+  </ol>
+
+  <p>Good luck! 🚀</p>
+</body>
+</html>
