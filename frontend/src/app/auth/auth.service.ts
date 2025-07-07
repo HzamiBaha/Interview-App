@@ -32,13 +32,19 @@ export class AuthService {
     }
   }
 
-  login(email: string, password: string){
-    // save user token to local storage and set current user
+  login(email: string, password: string) : Observable<TokenPayload>{
+    return this.http.post<TokenPayload>(`${this.apiUrl}/login`, {email, password}).pipe(
+      tap(response => {
+        this.currentUserSubject.next(response);
+        localStorage.setItem('token', JSON.stringify({ token: response, name: name }));
+      })
+    )
+
   }
 
   logout(): void {
-    // Remove token from local storage and reset current user
-    // get back to login page
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
   }
 
   isAuthenticated(): boolean {
@@ -47,6 +53,7 @@ export class AuthService {
 
     try {
       const decoded = jwtDecode<TokenPayload>(token);
+      this.currentUserSubject.next(decoded);
       return decoded.exp > Date.now() / 1000;
     } catch {
       return false;
@@ -54,12 +61,13 @@ export class AuthService {
   }
 
   getCurrentUserId() {
+    this.isAuthenticated();
+    this.currentUserSubject.value?.sub
     // Get the current user ID from the BehaviorSubject
-
   }
 
   getCurrentUserEmail() {
-// Get the current user email from the BehaviorSubject
+  // Get the current user email from the BehaviorSubject
     
   }
 

@@ -8,6 +8,25 @@
     </mat-card-header>
     <mat-card-content>
         <div *ngIf="isLoading">Loading tasks...</div>
+        <div *ngFor="let task of tasks">
+            <ul>
+                <li>
+                    task.title
+                </li>
+                <li>
+                    task.status
+                </li>
+                <button
+                (onClick)="deleteTask(task.id ?? 0)">
+                    delete
+                </button>
+                <button
+                (onClick)="openEditDialog(task)">
+                    Edit
+                </button>
+            </ul>
+
+        </div>
         <!-- here you need to create a list of tasks -->
         <!-- each task should have a title and a status  -->
         <!-- user must be able to see only his tasks, delete and edit them  -->

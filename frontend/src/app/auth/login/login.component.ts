@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -25,16 +26,25 @@ import { RouterModule } from '@angular/router';
 })
 export class LoginComponent {
   loginForm = this.fb.group({
-// create form controls with validation email and password
+    email:['', [Validators.required, Validators.email]],
+    password: ["", [Validators.required]]
   });
-
+  
+  user = {email: "", password: ""};
   errorMessage: string | null = null;
 
   constructor(private fb: FormBuilder, private authService: AuthService) {}
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      // handle login with authservice
+      this.authService.login(this.user.email, this.user.password).subscribe({
+        next: (response) => {
+          console.log("user connected");
+        },
+        error: (error) => {
+          alert("login not successful");
+        }
+      })
     }
   }
 }

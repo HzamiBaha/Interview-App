@@ -32,11 +32,27 @@ export class TaskListComponent {
     private authService: AuthService,
     private dialog: MatDialog
   ) {
+
     this.loadTasks();
   }
 
   loadTasks(): void {
     this.isLoading = true;
+    if(this.authService.isAuthenticated()){
+      let userId;
+      this.authService.currentUser$.subscribe(response => {
+        userId = response?.sub
+      });
+      console.log(userId);
+      const id = Number(userId);
+      console.log(id);
+      this.taskService.getTasks(id).subscribe({
+        next: (response) => {
+          this.tasks = response
+          this.isLoading = false;
+        }
+      })
+    }
     // check if user is authenticated
     // get the tasks for the current user
     // stop the loader in case of success
@@ -64,7 +80,7 @@ export class TaskListComponent {
   }
 
   deleteTask(id: number): void {
-    // delete the task by id after confirmation
+    this.taskService.deleteTask(id).subscribe()
   }
 
   logout(): void {

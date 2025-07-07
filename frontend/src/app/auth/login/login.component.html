@@ -4,7 +4,15 @@
   </mat-card-header>
   <mat-card-content>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    
+      <label>Email</label>
+      <input type="email" formControlName="email" [(ngModel)]="user.email">
+      <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
+      <span *ngIf="loginForm.get('email')?.errors?.['email']">Invalid email format</span>
+
+      <label>Password</label>
+      <input type="password" formControlName="password" [(ngModel)]="user.password">
+      <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+
       <!-- create the input fields for email and password with validation -->
 
       <div *ngIf="errorMessage" class="error-message">
