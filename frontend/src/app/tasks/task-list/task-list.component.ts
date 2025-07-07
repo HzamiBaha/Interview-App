@@ -74,7 +74,7 @@ export class TaskListComponent {
     //open a dialog to create a new task
     // pass the mode as 'create' to the dialog
     // and handle the result to refresh the task list
-    this.dialog.open(TaskFormComponent);
+    this.openCreateDialog();
   }
 
   openEditDialog(task: Task): void {
@@ -90,8 +90,23 @@ export class TaskListComponent {
     });
   }
 
-  deleteTask(id: number): void {
+  deleteTask(id: number | undefined): void {
     // delete the task by id after confirmation
+    if (!id) {
+      console.error('Task ID is undefined');
+      return;
+    }
+    if (confirm('Are you sure you want to delete this task?')) {
+      this.taskService.deleteTask(id).subscribe({
+        next: () => {
+          console.log('Task deleted successfully');
+          this.loadTasks();
+        },
+        error: (error) => {
+          console.error('Error deleting task:', error);
+        },
+      });
+    }
   }
 
   logout(): void {
