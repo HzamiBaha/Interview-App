@@ -18,8 +18,14 @@
   margin-top: 1rem;
   text-align: center;
 }
-.link-button{
+.link-button {
   text-decoration: underline;
   cursor: pointer;
   font-weight: 500;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  gap: 5px;
 }

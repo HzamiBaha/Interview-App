@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -18,23 +18,47 @@ import { RouterModule } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
   loginForm = this.fb.group({
-// create form controls with validation email and password
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
   errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      // handle login with authservice
+      this.authService
+        .login(
+          this.loginForm.get('email')?.value!,
+          this.loginForm.get('password')?.value!
+        )
+        .subscribe({
+          next: (success) => {
+            if (success) {
+              console.log(success);
+              this.router.navigate(['/tasks']);
+              this.errorMessage = null;
+            } else {
+              this.errorMessage = 'Invalid email or password';
+            }
+          },
+          error: (error) => {
+            this.errorMessage =
+              'An error occurred during login. Please try again.';
+          },
+        });
     }
   }
 }
