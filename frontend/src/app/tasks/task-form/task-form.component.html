@@ -1,4 +1,3 @@
-<!-- form.component.html -->
 <mat-card>
   <mat-card-header>
     <mat-card-title>{{ isEditMode ? 'Edit Task' : 'Create New Task' }}</mat-card-title>
@@ -11,8 +10,20 @@
         <mat-error *ngIf="title?.hasError('required')">
           Title is required
         </mat-error>
+        
         <mat-error *ngIf="title?.hasError('minlength')">
           Title must be at least 3 characters
+        </mat-error>
+      </mat-form-field>
+       <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description </mat-label>
+        <input matInput formControlName="description" required>
+        <mat-error *ngIf="title?.hasError('required')">
+          Description is required
+        </mat-error>
+        
+        <mat-error *ngIf="title?.hasError('minlength')">
+          Description must be at least 3 characters
         </mat-error>
       </mat-form-field>
 
@@ -26,7 +37,6 @@
         <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading">Cancel</button>
         <button mat-raised-button color="primary" type="submit" [disabled]="taskForm.invalid || isLoading">
           <span *ngIf="!isLoading">{{ isEditMode ? 'Update' : 'Create' }}</span>
-          <!-- <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner> -->
         </button>
       </div>
     </form>

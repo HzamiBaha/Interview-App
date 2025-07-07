@@ -1,4 +1,3 @@
-// form.component.ts
 import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -29,12 +28,8 @@ import { AuthService } from '../../auth/auth.service';
 })
 export class TaskFormComponent {
   taskForm = this.fb.group({
-<<<<<<< HEAD
     title: ['', [Validators.required, Validators.minLength(3)]],
     completed: [false]
-=======
-    // Define the form controls with validation
->>>>>>> b5cd4182a89a90b35b93a5503493045ef8e4d8e5
   });
 
   isEditMode = false;
@@ -51,17 +46,11 @@ export class TaskFormComponent {
   ) {
     this.isEditMode = data.mode === 'edit';
     if (this.isEditMode && data.task) {
-<<<<<<< HEAD
       this.currentTaskId = data.task.id!;
       this.taskForm.patchValue({
         title: data.task.title,
         completed: data.task.completed
       });
-=======
-
-      // Initialize the form with the task data if in edit mode
-
->>>>>>> b5cd4182a89a90b35b93a5503493045ef8e4d8e5
     }
   }
 
@@ -74,12 +63,7 @@ export class TaskFormComponent {
     this.isLoading = true;
     this.errorMessage = null;
 
-<<<<<<< HEAD
     const userId = this.authService.getCurrentUserId();
-=======
-    const userId = 123; // get the user ID from the auth service
-
->>>>>>> b5cd4182a89a90b35b93a5503493045ef8e4d8e5
 
     if (!userId) {
       this.errorMessage = 'User not authenticated';
@@ -88,51 +72,28 @@ export class TaskFormComponent {
     }
 
     const taskData: Omit<Task, 'id'> = {
-<<<<<<< HEAD
       title: this.taskForm.value.title!,
       completed: this.taskForm.value.completed!,
-      userId: parseInt(userId)
-    };
-
-    if (this.isEditMode && this.currentTaskId) {
-      // Update existing task
-      const updateData: Task = {
-        id: this.currentTaskId,
-        ...taskData
-      };
-      this.taskService.updateTask(updateData).subscribe({
-        next: () => {
-          this.dialogRef.close(true);
-        },
-        error: (error) => {
-          this.errorMessage = 'Error updating task';
-          this.isLoading = false;
-        }
-      });
-    } else {
-      // Create new task
-      this.taskService.createTask(taskData).subscribe({
-        next: () => {
-          this.dialogRef.close(true);
-        },
-        error: (error) => {
-          this.errorMessage = 'Error creating task';
-          this.isLoading = false;
-        }
-      });
-    }
-=======
-      title: "test", // this.taskForm.value.title,
-      completed: true, // this.taskForm.value.completed,
       userId: userId
     };
 
-    //handle the task creation or update based on the mode
-    // and close the dialog with success or error
-    // If in edit mode, include the current task ID
+    const operation = this.isEditMode 
+      ? this.taskService.updateTask({ ...taskData, id: this.currentTaskId! })
+      : this.taskService.createTask(taskData);
+
+    operation.subscribe({
+      next: (result) => {
+        this.isLoading = false;
+        this.dialogRef.close(true);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = 'Failed to save task. Please try again.';
+        console.error('Task save error:', error);
+      }
+    });
 
 
->>>>>>> b5cd4182a89a90b35b93a5503493045ef8e4d8e5
   }
 
   onCancel(): void {
