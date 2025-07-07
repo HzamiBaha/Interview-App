@@ -14,7 +14,7 @@ interface TokenPayload {
   email: string;
   iat: number;
   exp: number;
-  sub: string;  // This is the user ID in string format
+  sub: string;  
 }
 
 @Injectable({
@@ -33,12 +33,21 @@ export class AuthService {
   }
 
   login(email: string, password: string){
-    // save user token to local storage and set current user
+    return this.http.post<{ accessToken: string }>(`${this.apiUrl}/login`, { email, password }).pipe(
+      tap(response => {
+                console.log(response);
+
+        localStorage.setItem('token', response.accessToken);
+        this.setCurrentUser(response.accessToken);
+      }),
+      map(response => response.accessToken)
+    );
   }
 
   logout(): void {
-    // Remove token from local storage and reset current user
-    // get back to login page
+    localStorage.removeItem('token');
+    this.currentUserSubject.next(null);
+    this.router.navigate(['/login']);
   }
 
   isAuthenticated(): boolean {
@@ -54,20 +63,45 @@ export class AuthService {
   }
 
   getCurrentUserId() {
-    // Get the current user ID from the BehaviorSubject
+    const currentUser = this.currentUserSubject.value;
+    return currentUser ? parseInt(currentUser.sub, 10) : null;
 
   }
 
   getCurrentUserEmail() {
-// Get the current user email from the BehaviorSubject
-    
+    const currentUser = this.currentUserSubject.value;
+    return currentUser ? currentUser.email : null;
   }
+    
+  
 
   private setCurrentUser(token: string): void {
-    // Decode the token and set the current user
+    try {
+      const decoded = jwtDecode<TokenPayload>(token);
+      this.currentUserSubject.next(decoded);
+    } catch (error) {
+      console.error('Invalid token', error);
+      this.currentUserSubject.next(null);
+    }
   }
-  // Add this method to the AuthService class
   register(email: string, password: string) {
-   // Register a new user by sending a POST request to the API
+    return this.http.post<{ token: string }>(`${this.apiUrl}/register`, { email, password }).pipe(    
+    );
+} 
+ isLoggedIn(): boolean {
+    const token = localStorage.getItem('token');
+    return !!token && this.isTokenValid(token);
+  }
+  private isTokenValid(token: string): boolean {
+    try {
+      const decoded = jwtDecode<TokenPayload>(token);
+      return decoded.exp > Date.now() / 1000;
+    } catch (error) {
+      console.error('Invalid token', error);
+      return false;
+    }
+  }
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 }

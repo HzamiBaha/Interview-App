@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -25,23 +25,36 @@ import { RouterModule } from '@angular/router';
 })
 export class RegisterComponent {
   registerForm = this.fb.group({
-// create form controls with validation email and password
-// add confirmPassword field with validation
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    confirmPassword: ['', [Validators.required]]
+  }, {
+    validators: this.passwordMatchValidator
   }, );
 
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+  constructor(private fb: FormBuilder, private authService: AuthService,private router:Router) {}
 
   passwordMatchValidator(form: any) {
-  
-    // Custom validator to check if password and confirmPassword match
+  return form.get('password')?.value === form.get('confirmPassword')?.value
+    ? null : { 'mismatch': true };
   }
 
   onSubmit(): void {
     if (this.registerForm.valid) {
-    //handle registration with authservice
-    }
+      const { email, password } = this.registerForm.value;
+      this.authService.register(email!, password!).subscribe({
+        next: () => {
+          this.successMessage = 'Registration successful! You can now log in.';
+          this.errorMessage = null;
+          this.router.navigate(['/login']); 
+        },
+        error: (error) => {
+          this.errorMessage = 'Registration failed. Please try again.';
+          console.error('Registration error:', error);
+        }
+      });
   }
-}
+} }

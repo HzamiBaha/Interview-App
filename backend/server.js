@@ -2,7 +2,7 @@ const jsonServer = require("json-server");
 const auth = require("json-server-auth");
 const cors = require("cors");
 const path = require("path");
-const express = require("express"); // 👈 Required to use express.static
+const express = require("express"); 
 
 const app = jsonServer.create();
 const router = jsonServer.router("db.json");

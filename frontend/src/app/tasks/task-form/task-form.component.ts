@@ -29,14 +29,17 @@ import { AuthService } from '../../auth/auth.service';
 })
 export class TaskFormComponent {
   taskForm = this.fb.group({
-    // Define the form controls with validation
+    title: ['', [Validators.required, Validators.minLength(3)]],
+    description : ['', [Validators.required, Validators.minLength(10)]],
+    completed: [false],
+    
   });
 
   isEditMode = false;
   currentTaskId: number | null = null;
   isLoading = false;
   errorMessage: string | null = null;
-
+  connectedUser= 0; 
   constructor(
     private fb: FormBuilder,
     private taskService: TaskService,
@@ -47,9 +50,12 @@ export class TaskFormComponent {
     this.isEditMode = data.mode === 'edit';
     if (this.isEditMode && data.task) {
 
-      // Initialize the form with the task data if in edit mode
-
-    }
+this.taskForm.patchValue({
+      title: data.task.title,
+      completed: data.task.completed
+    });
+    };
+  this.connectedUser = this.authService.getCurrentUserId() || 0; // Get the user ID from the auth service
   }
 
   onSubmit(): void {
@@ -61,7 +67,7 @@ export class TaskFormComponent {
     this.isLoading = true;
     this.errorMessage = null;
 
-    const userId = 123; // get the user ID from the auth service
+    const userId = this.connectedUser; 
 
 
     if (!userId) {
@@ -71,8 +77,8 @@ export class TaskFormComponent {
     }
 
     const taskData: Omit<Task, 'id'> = {
-      title: "test", // this.taskForm.value.title,
-      completed: true, // this.taskForm.value.completed,
+      title: this.taskForm.value.title, 
+      completed: true, 
       userId: userId
     };
 

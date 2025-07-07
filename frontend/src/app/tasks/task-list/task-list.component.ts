@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TaskService, Task } from '../task.service';
 import { AuthService } from '../../auth/auth.service';
 import { TaskFormComponent } from '../task-form/task-form.component';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -26,27 +27,40 @@ import { TaskFormComponent } from '../task-form/task-form.component';
 export class TaskListComponent {
   tasks: Task[] = [];
   isLoading = false;
-
+currentUser: any;
   constructor(
     private taskService: TaskService,
     private authService: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,private auth: AuthService,private router: Router
   ) {
     this.loadTasks();
-  }
+this.currentUser = this.auth.getCurrentUserId();}
 
   loadTasks(): void {
     this.isLoading = true;
-    // check if user is authenticated
-    // get the tasks for the current user
-    // stop the loader in case of success
+    this.taskService.getTasks(this.currentUser).subscribe({
+      next: (tasks) => {
+        this.tasks = tasks;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading tasks:', error);
+        this.isLoading = false;
+      }
+    });
 
   }
 
   openCreateDialog(): void {
-    //open a dialog to create a new task
-    // pass the mode as 'create' to the dialog
-    // and handle the result to refresh the task list
+    const dialogRef = this.dialog.open(TaskFormComponent, {
+      width: '400px',
+      data: { mode: 'create' }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadTasks();
+      }
+    });
 
   }
 
@@ -64,10 +78,21 @@ export class TaskListComponent {
   }
 
   deleteTask(id: number): void {
-    // delete the task by id after confirmation
+ this.taskService.deleteTask(id).subscribe({
+      next: () => { 
+        this.loadTasks();
+      },
+      error: (error) => {
+        console.error('Error deleting task:', error);
+      }
+  } );
   }
 
   logout(): void {
     this.authService.logout();
+  }
+  goToDetails(taskid: number): void {
+    this.router.navigate(['/tasks/details', taskid]);
+    console.log('Task details:', taskid);
   }
 }

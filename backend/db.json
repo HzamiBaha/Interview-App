@@ -4,6 +4,36 @@
       "email": "newuser@example.com",
       "password": "$2a$10$0QHFRLIbka4kRHd5hPERuebcojQXqyv50ecbcIc0uB0InCw3L3z3G",
       "id": 1
+    },
+    {
+      "email": "malekzaidi@esprit.tn",
+      "password": "$2a$10$5xFGCSn5k9dGo5lG.66R1OCoQcSwYCzLSuw4LLQDGhuZTw7wnV/12",
+      "id": 2
+    },
+    {
+      "email": "m@m.com",
+      "password": "$2a$10$3Q0Yx1k8KRPNy7SdlhguD.ZS0n/yG1L7C9hBllms/goxBjEHe1W0.",
+      "id": 3
+    },
+    {
+      "email": "test@es.com",
+      "password": "$2a$10$MrRhYESNowOyQuSn6wE/ceEJPoGjFgJok3DSmY6m1nWz8cC4iTuyy",
+      "id": 4
+    },
+    {
+      "email": "ajmed@gmail.com",
+      "password": "$2a$10$m0LgYr02x1S/C.UaNcrlZuT8s6qc94WqiL1c10X808scHCq4GGMwq",
+      "id": 5
+    },
+    {
+      "email": "malekzaidi@espritt.tn",
+      "password": "$2a$10$G6VxmU1wx/Dl.ouQzabQwu.mP8Nc0hIsEArnsB97Ym4kII8zuaJv.",
+      "id": 6
+    },
+    {
+      "email": "dzzd@gmail.com",
+      "password": "$2a$10$Y3oUh5xyChUmwHTI73PiEuoAes26.n/KeQzstxpCGFMeRMvUQCr5i",
+      "id": 7
     }
   ],
   "tasks": [
@@ -12,6 +42,24 @@
       "title": "Sample Task",
       "completed": false,
       "userId": 1
+    },
+    {
+      "id": 2
+    },
+    {
+      "id": 3
+    },
+    {
+      "id": 4
+    },
+    {
+      "id": 5
+    },
+    {
+      "id": 6
+    },
+    {
+      "id": 7
     }
   ]
 }

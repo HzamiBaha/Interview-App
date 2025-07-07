@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -25,16 +25,29 @@ import { RouterModule } from '@angular/router';
 })
 export class LoginComponent {
   loginForm = this.fb.group({
-// create form controls with validation email and password
+    email: ['', [Validators.required, Validators.minLength(3)]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
   });
-
+  email: string = '';
+  password: string = '';
   errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+  constructor(private fb: FormBuilder, private authService: AuthService,private router:Router) {}
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      // handle login with authservice
+ this.email = this.loginForm.value.email || '';
+ this.password = this.loginForm.value.password || '';
+      this.authService.login(this.email, this.password).subscribe({
+        next: () => {
+          this.errorMessage = null;
+          // this.router.navigate('/tasks');
+        },
+        error: (error) => {
+          this.errorMessage = 'Invalid email or password';
+          console.error('Login error:', error);
+        }
+      });
     }
   }
 }

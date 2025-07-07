@@ -4,8 +4,12 @@ import { AuthService } from './auth.service';
 
 export const authGuard: CanActivateFn = () => {
 
-  // Inject AuthService and Router using Angular's dependency injection
-  // navigate to /login if user is not authenticated
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-  return false;
+  if (authService.isLoggedIn()) {
+    return true;
+  } else {
+    return router.navigate(['/login']);
+  }
 };
