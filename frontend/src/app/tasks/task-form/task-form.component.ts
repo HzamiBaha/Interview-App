@@ -7,7 +7,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { TaskService, Task } from '../task.service';
 import { AuthService } from '../../auth/auth.service';
 
@@ -25,7 +29,7 @@ import { AuthService } from '../../auth/auth.service';
     MatDialogModule,
   ],
   templateUrl: './task-form.component.html',
-  styleUrls: ['./task-form.component.scss']
+  styleUrls: ['./task-form.component.scss'],
 })
 export class TaskFormComponent {
   taskForm = this.fb.group({
@@ -42,13 +46,18 @@ export class TaskFormComponent {
     private taskService: TaskService,
     private authService: AuthService,
     private dialogRef: MatDialogRef<TaskFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { mode: 'create' | 'edit', task?: Task }
+    @Inject(MAT_DIALOG_DATA)
+    public data: { mode: 'create' | 'edit'; task?: Task }
   ) {
     this.isEditMode = data.mode === 'edit';
     if (this.isEditMode && data.task) {
-
       // Initialize the form with the task data if in edit mode
-
+      const task = data.task as Task;
+      this.currentTaskId = Number(task.id);
+      this.fb.group({
+        title: [task.title, [Validators.required]],
+        completed: [task.completed, [Validators.required]],
+      });
     }
   }
 
@@ -61,8 +70,7 @@ export class TaskFormComponent {
     this.isLoading = true;
     this.errorMessage = null;
 
-    const userId = 123; // get the user ID from the auth service
-
+    const userId = this.authService.getCurrentUserId();
 
     if (!userId) {
       this.errorMessage = 'User not authenticated';
@@ -71,16 +79,20 @@ export class TaskFormComponent {
     }
 
     const taskData: Omit<Task, 'id'> = {
-      title: "test", // this.taskForm.value.title,
+      title: 'test', // this.taskForm.value.title,
       completed: true, // this.taskForm.value.completed,
-      userId: userId
+      userId: Number(userId),
     };
+    if (this.isEditMode) {
+      const task = { ...taskData, id: this.currentTaskId } as Task;
+      this.taskService.updateTask(task).subscribe();
+    }else {
+      this.taskService.createTask(taskData).subscribe();
+    }
 
     //handle the task creation or update based on the mode
     // and close the dialog with success or error
     // If in edit mode, include the current task ID
-
-
   }
 
   onCancel(): void {
