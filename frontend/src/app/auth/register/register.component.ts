@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -37,7 +42,7 @@ export class RegisterComponent {
 
   constructor(private fb: FormBuilder, private authService: AuthService) {}
 
-  passwordMatchValidator(form: any) {
+  passwordMatchValidator(form: FormGroup) {
     // Custom validator to check if password and confirmPassword match
     return form.get('password')?.value === form.get('confirmPassword')?.value
       ? null
@@ -47,6 +52,10 @@ export class RegisterComponent {
   onSubmit(): void {
     if (this.registerForm.valid) {
       //handle registration with authservice
+      if (this.passwordMatchValidator(this.registerForm)) {
+        this.errorMessage = 'Passwords do not match.';
+        return;
+      }
       this.authService
         .register(
           this.registerForm.get('email')?.value!,

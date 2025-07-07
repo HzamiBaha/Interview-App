@@ -24,12 +24,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./task-list.component.scss'],
 })
 export class TaskListComponent {
-  navigatetodetails(id: number | undefined) {
-    if (!id) {
-      console.error('Task ID is undefined');
-      return;
-    }
-    this.router.navigate(['/details', id]);
+  editTask(task: Task) {
+    this.openEditDialog(task);
   }
   tasks: Task[] = [];
   isLoading = false;
@@ -69,12 +65,27 @@ export class TaskListComponent {
       });
     }
   }
-
+  navigatetodetails(id: number | undefined) {
+    if (!id) {
+      console.error('Task ID is undefined');
+      return;
+    }
+    this.router.navigate(['/details', id]);
+  }
   openCreateDialog(): void {
     //open a dialog to create a new task
     // pass the mode as 'create' to the dialog
     // and handle the result to refresh the task list
-    this.openCreateDialog();
+    const dialogRef = this.dialog.open(TaskFormComponent, {
+      width: '400px',
+      data: { mode: 'create' },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadTasks();
+      }
+    });
   }
 
   openEditDialog(task: Task): void {

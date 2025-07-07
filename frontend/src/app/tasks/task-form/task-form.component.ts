@@ -33,14 +33,15 @@ import { AuthService } from '../../auth/auth.service';
 })
 export class TaskFormComponent {
   taskForm = this.fb.group({
-    // Define the form controls with validation
+    title: ['', [Validators.required]],
+    completed: ['', [Validators.required]],
   });
 
   isEditMode = false;
   currentTaskId: number | null = null;
   isLoading = false;
   errorMessage: string | null = null;
-
+  
   constructor(
     private fb: FormBuilder,
     private taskService: TaskService,
@@ -86,8 +87,13 @@ export class TaskFormComponent {
     if (this.isEditMode) {
       const task = { ...taskData, id: this.currentTaskId } as Task;
       this.taskService.updateTask(task).subscribe();
-    }else {
-      this.taskService.createTask(taskData).subscribe();
+    } else {
+      this.taskService.createTask(taskData).subscribe({
+        next: (response) => {
+          console.log(response);
+        },
+        error: console.error,
+      });
     }
 
     //handle the task creation or update based on the mode
