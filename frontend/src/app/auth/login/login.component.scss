@@ -1,0 +1,37 @@
+.login-card {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  color: #f44336;
+  margin-bottom: 1rem;
+  padding: 8px;
+  background-color: #ffebee;
+  border-radius: 4px;
+}
+
+.register-link {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.link-button {
+  color: #1976d2;
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.link-button{
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 500;
+}

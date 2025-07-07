@@ -1,0 +1,15 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Task Management</mat-card-title>
+    <button mat-button (click)="logout()" style="margin-left: auto;">Logout</button>
+  </mat-card-header>
+  <mat-card-content>
+    <div *ngIf="isLoading">Loading tasks...</div>
+    <mat-list *ngIf="!isLoading">
+      <mat-list-item *ngFor="let task of tasks">
+        <span matListItemTitle>{{ task.title }}</span>
+        <span matListItemLine>Status: {{ task.completed ? 'Completed' : 'Pending' }}</span>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,62 @@
+{
+  "users": [
+    {
+      "email": "newuser@example.com",
+      "password": "$2a$10$0QHFRLIbka4kRHd5hPERuebcojQXqyv50ecbcIc0uB0InCw3L3z3G",
+      "id": 1
+    },
+    {
+      "email": "matousifiras@esprit.tn",
+      "password": "$2a$10$gYhJbpVk29iHMAlwlRcnQOAAfdoOUrFXphDgZMXH9llRRixuTSA1u",
+      "id": 2
+    },
+    {
+      "email": "admin@gmail.com",
+      "password": "$2a$10$R4bZDNtkiQpSraBrM3MtnuHmrwDcn.P8q3TlRjfSi.yzMHT0HO3la",
+      "id": 3
+    },
+    {
+      "email": "testwithpostman@example.com",
+      "password": "$2a$10$EldD.Kr80iogDC9Jte.lfeu6ILZeH3/S.gkxmr8zPIXivg7rsgc.G",
+      "id": 4
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Sample Task",
+      "completed": false,
+      "userId": 1
+    },
+    {
+      "id": 3,
+      "title": "task updated",
+      "completed": true,
+      "userId": 3
+    },
+    {
+      "title": "task test",
+      "completed": false,
+      "userId": 3,
+      "id": 4
+    },
+    {
+      "title": "task validation",
+      "completed": true,
+      "userId": 3,
+      "id": 5
+    },
+    {
+      "title": "task accepted",
+      "completed": true,
+      "userId": 3,
+      "id": 6
+    },
+    {
+      "title": "postman task",
+      "description": "taskwithpostman",
+      "completed": "true",
+      "id": 7
+    }
+  ]
+}

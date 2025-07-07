@@ -1,0 +1,28 @@
+mat-card {
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  color: #f44336;
+  margin-bottom: 1rem;
+  padding: 8px;
+  background-color: #ffebee;
+  border-radius: 4px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+mat-checkbox {
+  margin-bottom: 1rem;
+}
