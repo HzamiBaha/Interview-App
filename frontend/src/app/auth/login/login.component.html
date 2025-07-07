@@ -3,15 +3,29 @@
     <mat-card-title>Login</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    
-      <!-- create the input fields for email and password with validation -->
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" required name="email" [(ngModel)]="credentials.email" #email="ngModel">
+        <div *ngIf="email.invalid && email.touched" class="error-message">
+          Email is required
+        </div>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" required name="password" [(ngModel)]="credentials.password" #password="ngModel">
+        <div *ngIf="password.invalid && password.touched" class="error-message">
+          Password is required
+        </div>
+      </mat-form-field>
 
       <div *ngIf="errorMessage" class="error-message">
         {{ errorMessage }}
       </div>
 
-      <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">
+      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
         Login
       </button>
       <div class="register-link">

@@ -32,15 +32,22 @@ export class AuthService {
     }
   }
 
-  login(email: string, password: string){
-    // save user token to local storage and set current user
+ login(email: string, password: string): Observable<string> {
+    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, { email, password })
+      .pipe(
+        tap(response => {
+          localStorage.setItem('token', response.token);
+          this.setCurrentUser(response.token);
+        }),
+        map(response => response.token)
+      );
   }
 
   logout(): void {
-    // Remove token from local storage and reset current user
-    // get back to login page
+    localStorage.removeItem('token');
+    this.currentUserSubject.next(null);
+    this.router.navigate(['/login']);
   }
-
   isAuthenticated(): boolean {
     const token = localStorage.getItem('token');
     if (!token) return false;
@@ -55,6 +62,8 @@ export class AuthService {
 
   getCurrentUserId() {
     // Get the current user ID from the BehaviorSubject
+    const currentUser = this.currentUserSubject.getValue();
+    return currentUser ? parseInt(currentUser.sub, 10) : null;
 
   }
 
@@ -68,6 +77,9 @@ export class AuthService {
   }
   // Add this method to the AuthService class
   register(email: string, password: string) {
-   // Register a new user by sending a POST request to the API
-  }
+  return this.http.post<User>(`${this.apiUrl}/register`, {
+    email: email ?? '',
+    password: password ?? ''
+  });
+}
 }

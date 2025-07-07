@@ -30,6 +30,8 @@ import { AuthService } from '../../auth/auth.service';
 export class TaskFormComponent {
   taskForm = this.fb.group({
     // Define the form controls with validation
+    title: ['', [Validators.required, Validators.minLength(3)]],
+    completed: [false],
   });
 
   isEditMode = false;
@@ -48,6 +50,13 @@ export class TaskFormComponent {
     if (this.isEditMode && data.task) {
 
       // Initialize the form with the task data if in edit mode
+      this.currentTaskId = data.task.id || null;
+      this.isLoading = false;
+      this.errorMessage = null;
+      this.taskForm = this.fb.group({
+        title: [data.task.title, [Validators.required, Validators.minLength(3)]],
+        completed: [data.task.completed],
+      }); 
 
     }
   }
@@ -61,8 +70,8 @@ export class TaskFormComponent {
     this.isLoading = true;
     this.errorMessage = null;
 
-    const userId = 123; // get the user ID from the auth service
-
+  // get the user ID from the auth service
+    const userId = this.authService.getCurrentUserId();
 
     if (!userId) {
       this.errorMessage = 'User not authenticated';
@@ -77,6 +86,31 @@ export class TaskFormComponent {
     };
 
     //handle the task creation or update based on the mode
+    if (this.isEditMode && this.currentTaskId) {
+      const TaskData: Task = {
+        ...taskData,
+        id: this.currentTaskId
+      };
+      this.taskService.updateTask(TaskData).subscribe({
+        next: () => {
+          this.dialogRef.close(true);
+        },
+        error: (error) => {
+          this.errorMessage = error.message || 'Failed to update task';
+          this.isLoading = false;
+        }
+      });
+    } else {
+      this.taskService.createTask(taskData).subscribe({
+        next: () => {
+          this.dialogRef.close(true);
+        },
+        error: (error) => {
+          this.errorMessage = error.message || 'Failed to create task';
+          this.isLoading = false;
+        }
+      });
+    }
     // and close the dialog with success or error
     // If in edit mode, include the current task ID
 

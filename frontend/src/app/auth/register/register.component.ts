@@ -27,6 +27,11 @@ export class RegisterComponent {
   registerForm = this.fb.group({
 // create form controls with validation email and password
 // add confirmPassword field with validation
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    confirmPassword: ['', [Validators.required]]
+  }, {
+    validators: this.passwordMatchValidator // Custom validator to check if password and confirmPassword match
   }, );
 
   errorMessage: string | null = null;
@@ -37,11 +42,24 @@ export class RegisterComponent {
   passwordMatchValidator(form: any) {
   
     // Custom validator to check if password and confirmPassword match
+    return form.get('password')?.value === form.get('confirmPassword')?.value ? null : { mismatch: true };
   }
 
   onSubmit(): void {
     if (this.registerForm.valid) {
     //handle registration with authservice
+      const { email, password } = this.registerForm.value;
+      this.authService.register(email ?? '', password ?? '').subscribe({
+        next: () => {
+          this.successMessage = 'Registration successful! You can now log in.';
+          this.errorMessage = null;
+          this.registerForm.reset();
+        },
+        error: (error) => {
+          this.errorMessage = error.error.message || 'Registration failed. Please try again.';
+          this.successMessage = null;
+        }
+      });
     }
   }
 }
