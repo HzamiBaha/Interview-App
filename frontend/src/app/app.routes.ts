@@ -3,9 +3,13 @@ import { LoginComponent } from './auth/login/login.component';
 import { authGuard } from './auth/auth.guard';
 import { RegisterComponent } from './auth/register/register.component';
 import { TaskManagementComponent } from './tasks/task-management/task-management.component';
+import {ProductComponent} from "./product/product.component";
+import {UsersComponent} from "./users/users.component";
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'products/:id', component: ProductComponent },
+  { path: 'users', component: UsersComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'tasks', component: TaskManagementComponent, canActivate: [authGuard] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
