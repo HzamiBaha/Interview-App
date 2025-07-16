@@ -1,0 +1,25 @@
+<h2>👥 User Management</h2>
+
+<!-- Filter -->
+<input
+  type="text"
+  placeholder="Search user by name"
+  [(ngModel)]="filter"
+/>
+
+<p>🔢 Total users: {{ userCount() }} | Showing: {{ filteredUsers().length }}</p>
+
+<!-- User list -->
+<ul>
+  <li  *ngFor="let user of filteredUsers()">
+    <strong>{{ user.name }}</strong> - <small>{{ user.email }}</small>
+  </li>
+</ul>
+
+<!-- Add new user -->
+<h3>Add New User</h3>
+<input #name placeholder="Name" />
+<input #email placeholder="Email" />
+<button (click)="addUser(name.value, email.value); name.value=''; email.value=''">
+  ➕ Add
+</button>
